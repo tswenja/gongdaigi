@@ -14,10 +14,8 @@
 <script src="index.js"></script>
 <script>
   function getCode(text) {
-    console.log(text);
     httpGet("http://140.109.16.144/正規化翻譯?查詢語句=" + text + "&查詢腔口=閩南語", function(resp) {
       resp = JSON.parse(resp);
-      console.log(resp);
       var regularifiedText = resp['翻譯正規化結果'];
       getGongDaigi(text, 42, "http://140.109.16.144/語音合成?查詢腔口=閩南語&查詢語句=" + regularifiedText, 'result');
     });
