@@ -6,15 +6,30 @@
 <body>
 <h1>攻跨賣</h1>
 <div style="font-size:27px;">
-  你好嗎？我很好！
-  <button onclick="getCode();" style="font-size:inherit">取得嵌入碼</button>
+  <input type="text" id="queryText" value="你好嗎？我很好！" />
+  <button onclick="getCode(document.getElementById('queryText').value);" style="font-size:inherit">取得嵌入碼</button>
 </div>
 
 <div id="result"></div>
 <script src="index.js"></script>
 <script>
-  function getCode() {
-    getGongDaigi(42, "http://140.109.16.144/語音合成?查詢腔口=閩南語&查詢語句=你｜li2 好-無｜ho2-0bo5 ？｜? 我｜gua2 足｜tsiok4 好｜ho2 ！｜!", 'result');
+  function getCode(text) {
+    console.log(text);
+    httpGet("http://140.109.16.144/正規化翻譯?查詢語句=" + text + "&查詢腔口=閩南語", function(resp) {
+      resp = JSON.parse(resp);
+      console.log(resp);
+      var regularifiedText = resp['翻譯正規化結果'];
+      getGongDaigi(text, 42, "http://140.109.16.144/語音合成?查詢腔口=閩南語&查詢語句=" + regularifiedText, 'result');
+    });
+  }
+  function httpGet(theUrl, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        callback(xmlHttp.responseText);
+    };
+    xmlHttp.open( "GET", theUrl, true );
+    xmlHttp.send( null );
   }
 </script>
 </body>
